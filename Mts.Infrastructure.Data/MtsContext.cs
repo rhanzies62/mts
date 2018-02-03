@@ -25,6 +25,7 @@ namespace Mts.Infrastructure.Data
             modelBuilder.Entity<UserRole>().ToTable("UserRole").HasKey(e => new { e.UserId, e.RoleId });
             modelBuilder.Entity<RoleApplicationFeature>().ToTable("RoleApplicationFeature").HasKey(e => new {e.RoleId,e.ApplicationFeatureId });
             modelBuilder.Entity<ApplicationFeature>().ToTable("ApplicationFeature");
+            modelBuilder.Entity<RegistrationRequest>().ToTable("RegistrationRequest");
         }
 
         public DbSet<Business> Businesses { get; set; }
@@ -36,5 +37,6 @@ namespace Mts.Infrastructure.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RoleApplicationFeature> RoleApplicationFeatures { get; set; }
         public DbSet<ApplicationFeature> ApplicationFeature { get; set; }
+        public DbSet<RegistrationRequest> RegistrationRequest { get; set; }
     }
 }

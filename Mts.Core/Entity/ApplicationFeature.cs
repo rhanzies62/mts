@@ -17,6 +17,10 @@ namespace Mts.Core.Entity
         [MaxLength(50)]
         public string Name { get; set; }
 
+        [Required]
+        public bool IsPanel { get; set; }
+
+        [Required]
         public bool IsParent { get; set; }
 
         public int ParentId { get; set; }
