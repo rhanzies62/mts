@@ -11,9 +11,10 @@ using System;
 namespace Mts.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MtsContext))]
-    partial class MtsContextModelSnapshot : ModelSnapshot
+    [Migration("20180207151158_newtableupdates")]
+    partial class newtableupdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

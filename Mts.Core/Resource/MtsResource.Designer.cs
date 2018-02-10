@@ -61,6 +61,69 @@ namespace Mts.Core.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BCT.
+        /// </summary>
+        public static string AdminCreateUpdateBy {
+            get {
+                return ResourceManager.GetString("AdminCreateUpdateBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        public static string AdminRole {
+            get {
+                return ResourceManager.GetString("AdminRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Business name already exist.
+        /// </summary>
+        public static string InvalidBusinessName {
+            get {
+                return ResourceManager.GetString("InvalidBusinessName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email address already registered.
+        /// </summary>
+        public static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Role name and Business Name.
+        /// </summary>
+        public static string InvalidRoleBusiness {
+            get {
+                return ResourceManager.GetString("InvalidRoleBusiness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid token.
+        /// </summary>
+        public static string InvalidToken {
+            get {
+                return ResourceManager.GetString("InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ##link##.
+        /// </summary>
+        public static string LinkTkn {
+            get {
+                return ResourceManager.GetString("LinkTkn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///&lt;head&gt;
@@ -80,38 +143,29 @@ namespace Mts.Core.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to newbie04.
+        ///   Looks up a localized string similar to Role already assigned to this feature.
         /// </summary>
-        public static string SmtpPassword {
+        public static string RoleAlreadyAssignToFeature {
             get {
-                return ResourceManager.GetString("SmtpPassword", resourceCulture);
+                return ResourceManager.GetString("RoleAlreadyAssignToFeature", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 587.
+        ///   Looks up a localized string similar to Role already assigned to this user.
         /// </summary>
-        public static string SmtpPortNumber {
+        public static string RoleAlreadyAssignToUser {
             get {
-                return ResourceManager.GetString("SmtpPortNumber", resourceCulture);
+                return ResourceManager.GetString("RoleAlreadyAssignToUser", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to smtp.gmail.com.
+        ///   Looks up a localized string similar to Role already exist.
         /// </summary>
-        public static string SmtpServer {
+        public static string RoleAlreadyExist {
             get {
-                return ResourceManager.GetString("SmtpServer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to francis.cebu@basecamptech.ph.
-        /// </summary>
-        public static string SmtpUsername {
-            get {
-                return ResourceManager.GetString("SmtpUsername", resourceCulture);
+                return ResourceManager.GetString("RoleAlreadyExist", resourceCulture);
             }
         }
     }

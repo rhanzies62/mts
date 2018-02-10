@@ -1,0 +1,21 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col l6 offset-l3">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Registration Request</span>
+                    <p>{{Message}}</p>
+                    <form id="registrationRequest" name="frmRegistrationRequest" #registrationRequestForm="ngForm" *ngIf="!ShowResult">
+                        <div class="input-field">
+                            <input id="email" type="email" class="validate" [disabled]="Loading"  [(ngModel)]="model.Email" name="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                            <label for="email" data-error="Please provide a proper email address">Email Address</label>
+                        </div>
+                        <div class="right-align">
+                            <button class="btn" [disabled]="!registrationRequestForm.valid || Loading" (click)="submitRequest(model)">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

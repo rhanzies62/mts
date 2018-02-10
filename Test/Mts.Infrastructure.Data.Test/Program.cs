@@ -39,6 +39,8 @@ namespace Mts.Infrastructure.Data.Test
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Dto.RegistrationRequest, RegistrationRequest>();
+                cfg.CreateMap<Dto.User, User>();
+                cfg.CreateMap<Dto.Business, Business>();
             });
 
             IOptions<SmtpConfig> option = Options.Create<SmtpConfig>(new SmtpConfig
@@ -49,10 +51,36 @@ namespace Mts.Infrastructure.Data.Test
                 Username = "francis.cebu@basecamptech.ph"
             });
 
-            IMapper iMapper = config.CreateMapper();
-            var accountService = new AccountService(new CrudRepository<RegistrationRequest>(entities), iMapper, new Cryptography(), new EmailService(option));
-            accountService.RequestRegistration("francis.cebu@basecamptech.ph").Wait();
+            IOptions<AppSettingConfig> appConfig = Options.Create<AppSettingConfig>(new AppSettingConfig
+            {
+                Url = "http://www.mts.com",
+            });
 
+            IMapper iMapper = config.CreateMapper();
+            var accountService = new AccountService(new CrudRepository<RegistrationRequest>(entities),
+                                                    new CrudRepository<User>(entities),
+                                                    new CrudRepository<Business>(entities),
+                                                    new CrudRepository<UserBusiness>(entities),
+                                                    iMapper,
+                                                    new Cryptography(),
+                                                    new EmailService(option),
+                                                    appConfig);
+            //accountService.RequestRegistration("francis.cebu@basecamptech.ph").Wait();
+
+
+            accountService.RegisterUser(new Dto.User
+            {
+                FirstName = "Francis",
+                LastName = "Cebu",
+                Email = "francis.cebu@basecamptech.ph",
+                Password = "Password!",
+                Business = new Dto.Business
+                {
+                    Name = "BCTech HQ",
+                    NatureOfBusiness = "We offer something",
+                    Website = "http://www.basecamptechnologies.ph"
+                }
+            }).Wait();
             //InsertBusiness();
             //GetRecord().Wait();
             //UpdateRecord().Wait();

@@ -117,20 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminCreateUpdateBy" xml:space="preserve">
+    <value>BCT</value>
+  </data>
+  <data name="AdminRole" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="InvalidBusinessName" xml:space="preserve">
+    <value>Business name already exist</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Email address already registered</value>
+  </data>
+  <data name="InvalidRoleBusiness" xml:space="preserve">
+    <value>Invalid Role name and Business Name</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Invalid token</value>
+  </data>
+  <data name="LinkTkn" xml:space="preserve">
+    <value>##link##</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="RegistrationRequest" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\..\..\Users\franc\Desktop\RegistrationRequest.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="SmtpPassword" xml:space="preserve">
-    <value>newbie04</value>
+  <data name="RoleAlreadyAssignToFeature" xml:space="preserve">
+    <value>Role already assigned to this feature</value>
   </data>
-  <data name="SmtpPortNumber" xml:space="preserve">
-    <value>587</value>
+  <data name="RoleAlreadyAssignToUser" xml:space="preserve">
+    <value>Role already assigned to this user</value>
   </data>
-  <data name="SmtpServer" xml:space="preserve">
-    <value>smtp.gmail.com</value>
-  </data>
-  <data name="SmtpUsername" xml:space="preserve">
-    <value>francis.cebu@basecamptech.ph</value>
+  <data name="RoleAlreadyExist" xml:space="preserve">
+    <value>Role already exist</value>
   </data>
 </root>

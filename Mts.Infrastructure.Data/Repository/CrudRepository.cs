@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Mts.Infrastructure.Data.Repository
 {
-    public class CrudRepository<T> where T : class
+    public class CrudRepository<T> where T : class, IAuditDate
     {
         private readonly MtsContext _entities;
 
@@ -43,12 +44,15 @@ namespace Mts.Infrastructure.Data.Repository
 
         public async Task Save(T entity)
         {
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.UpdatedDate = DateTime.Today;
             _entities.Entry(entity).State = EntityState.Added;
             await _entities.SaveChangesAsync();
         }
 
         public async Task Update(T entity)
         {
+            entity.UpdatedDate = DateTime.Today;
             _entities.Entry(entity).State = EntityState.Modified;
             await _entities.SaveChangesAsync();
         }

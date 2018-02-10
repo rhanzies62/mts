@@ -4,19 +4,28 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+//page components
 import { AppComponent } from './components/app/app.component';
-import { NavMenuComponent } from './components/navmenu/navmenu.component';
-import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
+import { LandingComponent } from './components/landing/landing.component';
+import { RegistrationRequestComponent } from './components/registrationrequest/RegistrationRequest.Component';
+import { RegistrationComponent } from './components/registration/Registration.Component';
+
+//api components
+import { RegistrationRequestService } from '../app/services/RegistrationRequest.service';
+import { ValidateTokenService } from '../app/services/ValidateToken.service';
+
+//ui components
 
 @NgModule({
     declarations: [
         AppComponent,
-        NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
-        HomeComponent
+        LandingComponent,
+        RegistrationRequestComponent,
+        RegistrationComponent
+    ],
+    providers: [
+        RegistrationRequestService,
+        ValidateTokenService
     ],
     imports: [
         CommonModule,
@@ -24,9 +33,9 @@ import { CounterComponent } from './components/counter/counter.component';
         FormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
+            { path: 'home', component: LandingComponent },
+            { path: 'request', component: RegistrationRequestComponent },
+            { path: 'register', component: RegistrationComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ]

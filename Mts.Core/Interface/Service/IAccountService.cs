@@ -8,6 +8,8 @@ namespace Mts.Core.Interface.Service
 {
     public interface IAccountService
     {
-        Task<ApiResponse> RequestRegistration(string email);
+        Task<ApiResponse<string>> RequestRegistration(string email);
+        ApiResponse<bool> ValidateEmailToken(RegistrationRequest model);
+        Task<ApiResponse<User>> RegisterUser(User user);
     }
 }

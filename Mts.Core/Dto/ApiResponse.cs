@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mts.Core.Dto
 {
-    public class ApiResponse
+    public class ApiResponse<T>
     {
         public ApiResponse()
         {
@@ -13,5 +13,6 @@ namespace Mts.Core.Dto
         }
         public bool Success { get; set; }
         public List<string> ErrorMesssage { get; set; }
+        public T DataResponse { get; set; }
     }
 }
