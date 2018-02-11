@@ -11,8 +11,8 @@ using System;
 namespace Mts.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MtsContext))]
-    [Migration("20180202151650_initialcreate")]
-    partial class initialcreate
+    [Migration("20180211120602_reinitializedatabase")]
+    partial class reinitializedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,10 @@ namespace Mts.Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<bool>("IsPanel");
+
                     b.Property<bool>("IsParent");
 
                     b.Property<string>("Name")
@@ -33,6 +37,8 @@ namespace Mts.Infrastructure.Data.Migrations
                         .HasMaxLength(50);
 
                     b.Property<int>("ParentId");
+
+                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 
@@ -114,10 +120,32 @@ namespace Mts.Infrastructure.Data.Migrations
                     b.ToTable("Claim");
                 });
 
+            modelBuilder.Entity("Mts.Core.Entity.RegistrationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Email")
+                        .IsRequired();
+
+                    b.Property<string>("Token")
+                        .IsRequired();
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RegistrationRequest");
+                });
+
             modelBuilder.Entity("Mts.Core.Entity.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BusinessId");
 
                     b.Property<DateTime>("CreatedDate");
 
@@ -128,6 +156,8 @@ namespace Mts.Infrastructure.Data.Migrations
                     b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BusinessId");
 
                     b.ToTable("Role");
                 });
@@ -229,6 +259,14 @@ namespace Mts.Infrastructure.Data.Migrations
                     b.HasOne("Mts.Core.Entity.Claim", "Claim")
                         .WithMany()
                         .HasForeignKey("ClaimId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Mts.Core.Entity.Role", b =>
+                {
+                    b.HasOne("Mts.Core.Entity.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

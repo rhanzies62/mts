@@ -123,6 +123,9 @@
   <data name="AdminRole" xml:space="preserve">
     <value>Admin</value>
   </data>
+  <data name="EmailPasswordNotFound" xml:space="preserve">
+    <value>Email address or password are not found</value>
+  </data>
   <data name="InvalidBusinessName" xml:space="preserve">
     <value>Business name already exist</value>
   </data>

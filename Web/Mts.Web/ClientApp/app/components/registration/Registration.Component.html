@@ -1,7 +1,7 @@
 ﻿<div class="container">
     <div class="row">
         <div class="col l6 offset-l3">
-            <div class="card">
+            <div class="card" *ngIf="!showSuccess">
                 <div class="card-content" *ngIf="isTokenValidated">
                     <div *ngIf="!requestResult.success">
                         <span class="card-title">Oops! We found some issue in this request</span>
@@ -9,27 +9,31 @@
                     </div>
                     <div *ngIf="requestResult.success">
                         <span class="card-title">Please fill up the form</span>
-                        <form id="registration" name="frmRegistration" #registrationForm="ngForm" *ngIf="!ShowResult">
+                        <div *ngIf="!registrationResult.success">
+                            <span class="card-title">Oops! We found some issue in this request</span>
+                            <p *ngFor="let err of registrationResult.errorMesssage">{{err}}</p>
+                        </div>
+                        <form id="registration" name="frmRegistration" #registrationForm="ngForm" *ngIf="showResult">
                             <span>Contact Information</span>
                             <div class="input-field">
-                                <input id="firstname" type="text" class="validate" [(ngModel)]="model.FirstName" name="FirstName" required>
+                                <input id="firstname" type="text" class="validate" [disabled]="isProcessing" [(ngModel)]="model.FirstName" name="FirstName" required>
                                 <label for="firstname" data-error="First Name Required">First Name</label>
                             </div>
                             <div class="input-field">
-                                <input id="lastname" type="text" class="validate" [(ngModel)]="model.LastName" name="LastName" required>
+                                <input id="lastname" type="text" class="validate" [disabled]="isProcessing" [(ngModel)]="model.LastName" name="LastName" required>
                                 <label for="lastname" data-error="Last Name Required">Last Name</label>
                             </div>
                             <span>Business Information</span>
                             <div class="input-field">
-                                <input id="businessname" type="text" class="validate" [(ngModel)]="model.Business.Name" name="BusinessName" required>
+                                <input id="businessname" type="text" class="validate" [disabled]="isProcessing" [(ngModel)]="model.Business.Name" name="BusinessName" required>
                                 <label for="businessname" data-error="Business Name">Business Name</label>
                             </div>
                             <div class="input-field">
-                                <input id="website" type="url" class="validate" [(ngModel)]="model.Business.Website" name="Website">
+                                <input id="website" type="url" class="validate" [disabled]="isProcessing" [(ngModel)]="model.Business.Website" name="Website">
                                 <label for="website">Website</label>
                             </div>
                             <div class="input-field">
-                                <textarea id="natureofbusiness" class="materialize-textarea" [(ngModel)]="model.Business.NatureOfBusiness" name="NatureOfBusiness" required></textarea>
+                                <textarea id="natureofbusiness" class="materialize-textarea" [disabled]="isProcessing" [(ngModel)]="model.Business.NatureOfBusiness" name="NatureOfBusiness" required></textarea>
                                 <label for="natureofbusiness" data-error="Nature of Business is required">Nature of Business</label>
                             </div>
                             <span>Account Information</span>
@@ -38,19 +42,28 @@
                                 <label for="email" class="active" data-error="Email is required">Email</label>
                             </div>
                             <div class="input-field">
-                                <input id="password" type="password" class="validate" [(ngModel)]="model.Password" name="Password" required>
+                                <input id="password" type="password" class="validate" [disabled]="isProcessing" [(ngModel)]="model.Password" name="Password" required>
                                 <label for="password" data-error="Password Required">Password</label>
                             </div>
                             <div class="input-field">
-                                <input id="confirmpassword" type="password" class="validate" [(ngModel)]="model.ConfirmPassword" name="ConfirmPassword" required>
+                                <input id="confirmpassword" type="password" class="validate" [disabled]="isProcessing" [(ngModel)]="model.ConfirmPassword" name="ConfirmPassword" required>
                                 <label for="confirmpassword" data-error="Confirm Password Required">Confirm Password</label>
                             </div>
                             <div class="right-align">
-                                <button class="btn" [disabled]="!registrationForm.valid && model.Password != model.ConfirmPassword">Submit</button>
+                                <button class="btn" [disabled]="!registrationForm.valid || model.Password != model.ConfirmPassword || isProcessing" (click)="submitForm(model)">Submit</button>
                             </div>
                         </form>
                     </div>
 
+                </div>
+            </div>
+            <div class="card blue-grey darken-1" *ngIf="showSuccess">
+                <div class="card-content white-text">
+                    <span class="card-title">Congratulations!</span>
+                    <p>Your registration is complete!</p>
+                </div>
+                <div class="card-action">
+                    <a href="#">Login</a>
                 </div>
             </div>
         </div>

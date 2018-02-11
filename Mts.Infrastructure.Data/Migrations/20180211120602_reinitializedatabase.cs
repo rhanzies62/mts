@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Mts.Infrastructure.Data.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class reinitializedatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,9 +15,12 @@ namespace Mts.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    IsPanel = table.Column<bool>(nullable: false),
                     IsParent = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
-                    ParentId = table.Column<int>(nullable: false)
+                    ParentId = table.Column<int>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,18 +62,19 @@ namespace Mts.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Role",
+                name: "RegistrationRequest",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedDate = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Token = table.Column<string>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.Id);
+                    table.PrimaryKey("PK_RegistrationRequest", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,6 +111,28 @@ namespace Mts.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Role",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BusinessId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Role", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Role_Business_BusinessId",
+                        column: x => x.BusinessId,
+                        principalTable: "Business",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BusinessClaim",
                 columns: table => new
                 {
@@ -131,6 +157,32 @@ namespace Mts.Infrastructure.Data.Migrations
                         name: "FK_BusinessClaim_Claim_ClaimId",
                         column: x => x.ClaimId,
                         principalTable: "Claim",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserBusiness",
+                columns: table => new
+                {
+                    BusinessId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserBusiness", x => new { x.BusinessId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_UserBusiness_Business_BusinessId",
+                        column: x => x.BusinessId,
+                        principalTable: "Business",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserBusiness_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -165,31 +217,10 @@ namespace Mts.Infrastructure.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "UserBusiness",
-                columns: table => new
-                {
-                    BusinessId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserBusiness", x => new { x.BusinessId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_UserBusiness_Business_BusinessId",
-                        column: x => x.BusinessId,
-                        principalTable: "Business",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserBusiness_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Role_BusinessId",
+                table: "Role",
+                column: "BusinessId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserBusiness_UserId",
@@ -201,6 +232,9 @@ namespace Mts.Infrastructure.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "BusinessClaim");
+
+            migrationBuilder.DropTable(
+                name: "RegistrationRequest");
 
             migrationBuilder.DropTable(
                 name: "RoleApplicationFeature");
@@ -221,10 +255,10 @@ namespace Mts.Infrastructure.Data.Migrations
                 name: "Role");
 
             migrationBuilder.DropTable(
-                name: "Business");
+                name: "User");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Business");
         }
     }
 }

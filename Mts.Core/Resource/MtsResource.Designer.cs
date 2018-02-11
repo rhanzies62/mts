@@ -79,6 +79,15 @@ namespace Mts.Core.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email address or password are not found.
+        /// </summary>
+        public static string EmailPasswordNotFound {
+            get {
+                return ResourceManager.GetString("EmailPasswordNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Business name already exist.
         /// </summary>
         public static string InvalidBusinessName {

@@ -31,5 +31,7 @@ namespace Mts.Core.Entity
 
         [Required]
         public DateTime UpdatedDate { get; set; }
+
+        public virtual UserBusiness UserBusiness { get; set; }
     }
 }

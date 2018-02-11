@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Mts.Core.Dto;
 using Mts.Core.Dto.Config;
 using Mts.Core.Interface.Service;
 using Mts.Core.Resource;
@@ -43,10 +44,14 @@ namespace Mts.Web.Controllers
                 }
                 else
                 {
-                    return new BadRequestObjectResult(registrationResult);
+                    return new OkObjectResult(registrationResult);
                 }
             }
-            return new BadRequestObjectResult(ModelState);
+            var errMessage = ModelState.Values.SelectMany(v => v.Errors).Select(i => i.ErrorMessage).ToList();
+            return new OkObjectResult(new ApiResponse<bool>() {
+                Success = false,
+                ErrorMesssage = errMessage
+            });
         }
     }
 }

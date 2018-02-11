@@ -108,7 +108,7 @@ namespace Mts.Infrastructure.Service
 
         public async Task<ApiResponse<User>> RegisterUser(User user)
         {
-            var response = new ApiResponse<User> ();
+            var response = new ApiResponse<User>();
             var userEntity = _mapper.Map<Entity.User>(user);
             var businessEntity = _mapper.Map<Entity.Business>(user.Business);
 
@@ -179,11 +179,45 @@ namespace Mts.Infrastructure.Service
             return response;
         }
 
-        private string GenerateRegistrationRequestBody(string token,string email)
+        private string GenerateRegistrationRequestBody(string token, string email)
         {
             var body = MtsResource.RegistrationRequest;
             body = body.Replace(MtsResource.LinkTkn, $"{_config.Url}/register?t={token}&e={email}");
             return body;
+        }
+
+        public ApiResponse<LoginDetail> AuthenticateUser(UserLogin model)
+        {
+            var response = new ApiResponse<LoginDetail>();
+            var userDetail = _userRepo.List(i => i.Email == model.Email).FirstOrDefault();
+            if (userDetail == null && !_crypto.CheckMatch(userDetail.Password, model.Password))
+            {
+                response.Success = false;
+                response.ErrorMesssage.Add(MtsResource.EmailPasswordNotFound);
+            }
+            if (response.Success)
+            {
+                var userBusiness = _userBusinessRepo.List(i => i.UserId == userDetail.Id).FirstOrDefault();
+                if(userBusiness != null)
+                {
+                    string chip = $"{model.Email}:{model.Password}";
+                    response.DataResponse = new LoginDetail()
+                    {
+                        BusinessId = userBusiness.BusinessId,
+                        Id = userDetail.Id,
+                        Name = $"{userDetail.FirstName} {userDetail.LastName}",
+                        RefreshToken = $"{_crypto.EncryptString(chip, _config.EncryptionKey)}.{_crypto.CalculateHash(chip)}"
+                    };
+                }
+                else
+                {
+                    response.Success = false;
+                    response.ErrorMesssage.Add(MtsResource.EmailPasswordNotFound);
+                }
+
+            }
+
+            return response;
         }
     }
 }
