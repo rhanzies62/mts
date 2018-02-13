@@ -190,7 +190,7 @@ namespace Mts.Infrastructure.Service
         {
             var response = new ApiResponse<LoginDetail>();
             var userDetail = _userRepo.List(i => i.Email == model.Email).FirstOrDefault();
-            if (userDetail == null && !_crypto.CheckMatch(userDetail.Password, model.Password))
+            if (userDetail == null || !_crypto.CheckMatch(userDetail.Password, model.Password))
             {
                 response.Success = false;
                 response.ErrorMesssage.Add(MtsResource.EmailPasswordNotFound);
@@ -198,7 +198,7 @@ namespace Mts.Infrastructure.Service
             if (response.Success)
             {
                 var userBusiness = _userBusinessRepo.List(i => i.UserId == userDetail.Id).FirstOrDefault();
-                if(userBusiness != null)
+                if (userBusiness != null)
                 {
                     string chip = $"{model.Email}:{model.Password}";
                     response.DataResponse = new LoginDetail()
@@ -206,7 +206,8 @@ namespace Mts.Infrastructure.Service
                         BusinessId = userBusiness.BusinessId,
                         Id = userDetail.Id,
                         Name = $"{userDetail.FirstName} {userDetail.LastName}",
-                        RefreshToken = $"{_crypto.EncryptString(chip, _config.EncryptionKey)}.{_crypto.CalculateHash(chip)}"
+                        RefreshToken = $"{_crypto.EncryptString(chip, _config.EncryptionKey)}.{_crypto.CalculateHash(chip)}",
+                        AccessToken = RandomGenerator.GenerateString(16)
                     };
                 }
                 else
@@ -217,6 +218,51 @@ namespace Mts.Infrastructure.Service
 
             }
 
+            return response;
+        }
+
+        public ApiResponse<LoginDetail> ReAuthenticateUser(string refreshToken)
+        {
+            var response = new ApiResponse<LoginDetail>();
+            var tokenPartition = refreshToken.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (tokenPartition.Length < 2)
+            {
+                response.Success = false;
+                response.ErrorMesssage.Add(MtsResource.RefreshTokenNotValid);
+            }
+
+            if (response.Success)
+            {
+                try
+                {
+                    tokenPartition[0] = tokenPartition[0].Replace(" ", "+");
+                    var chip = _crypto.DecryptString(tokenPartition[0], _config.EncryptionKey);
+                    if (_crypto.CheckMatch(tokenPartition[1], chip))
+                    {
+                        var userCred = chip.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        if(userCred.Length == 2)
+                        {
+                            response = this.AuthenticateUser(new UserLogin
+                            {
+                                Email = userCred[0],
+                                Password = userCred[1]
+                            });
+                        }
+                        else
+                        {
+                            response.Success = false;
+                            response.ErrorMesssage.Add(MtsResource.RefreshTokenNotValid);
+                        }
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    response.Success = false;
+                    response.ErrorMesssage.Add(MtsResource.RefreshTokenNotValid);
+                }
+
+            }
             return response;
         }
     }

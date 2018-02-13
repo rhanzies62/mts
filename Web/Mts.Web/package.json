@@ -58,6 +58,8 @@
     "webpack-hot-middleware": "2.18.2",
     "webpack-merge": "4.1.0",
     "zone.js": "0.8.12",
-    "materialize-css": "0.100.2"
+    "materialize-css": "0.100.2",
+    "ngx-cookie": "2.0.1",
+    "angular2-jwt": "0.2.3"
   }
 }

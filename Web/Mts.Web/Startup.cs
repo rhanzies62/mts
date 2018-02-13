@@ -19,6 +19,12 @@ using Mts.Infrastructure.Service.Services;
 using Entity = Mts.Core.Entity;
 using Dto = Mts.Core.Dto;
 using Config = Mts.Core.Dto.Config;
+using Microsoft.AspNetCore.Authorization;
+using Mts.Web.Handlers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 namespace Mts.Web
 {
     public class Startup
@@ -46,10 +52,28 @@ namespace Mts.Web
             services.AddTransient<CrudRepository<Entity.UserRole>, CrudRepository<Entity.UserRole>>();
             services.AddTransient<CrudRepository<Entity.ApplicationFeature>, CrudRepository<Entity.ApplicationFeature>>();
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                        .AddJwtBearer(options =>
+                        {
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidateAudience = true,
+                                ValidateLifetime = true,
+                                ValidateIssuerSigningKey = true,
+                                ValidIssuer = "http://localhost:62758",
+                                ValidAudience = "http://localhost:62758",
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("E546C8DF278CD5931069B522E695D4F2"))
+                            };
+                        });
+
             services.AddOptions();
             services.Configure<Config.AppSettingConfig>(Configuration.GetSection("Config"));
             services.Configure<Config.SmtpConfig>(Configuration.GetSection("SmtpConfig"));
 
+            services.AddMemoryCache();
+            services.AddSingleton<CacheSingleton>();
+            services.AddSingleton<IAuthorizationHandler, SessionCacheHandler>();
             services.AddDbContext<MtsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
             services.AddAutoMapper();

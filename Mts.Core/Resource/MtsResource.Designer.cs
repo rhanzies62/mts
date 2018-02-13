@@ -133,12 +133,22 @@ namespace Mts.Core.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh token not valid.
+        /// </summary>
+        public static string RefreshTokenNotValid {
+            get {
+                return ResourceManager.GetString("RefreshTokenNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///&lt;head&gt;
-        ///	&lt;title&gt;Inventory Tracking System - Registration Request&lt;/title&gt;
+        ///	&lt;title&gt;Registration Request&lt;/title&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
+        ///&lt;div&gt;
         ///&lt;h1&gt;Welcome&lt;/h1&gt;
         ///&lt;p&gt;We receive your request of registration. Please click the link below to continue your registration process.&lt;/p&gt;
         ///&lt;a href=&quot;##link##&quot;&gt;##link##&lt;/a&gt;

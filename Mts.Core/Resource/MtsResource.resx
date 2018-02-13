@@ -141,9 +141,12 @@
   <data name="LinkTkn" xml:space="preserve">
     <value>##link##</value>
   </data>
+  <data name="RefreshTokenNotValid" xml:space="preserve">
+    <value>Refresh token not valid</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="RegistrationRequest" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\..\..\Users\franc\Desktop\RegistrationRequest.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>FileResource\RegistrationRequest.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="RoleAlreadyAssignToFeature" xml:space="preserve">
     <value>Role already assigned to this feature</value>

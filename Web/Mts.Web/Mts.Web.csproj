@@ -25,14 +25,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\dashboard\Dashboard.Component.ts" />
     <None Remove="ClientApp\app\components\landing\landing.component.ts" />
+    <None Remove="ClientApp\app\components\login\Login.Component.ts" />
     <None Remove="ClientApp\app\components\registrationrequest\RegistrationRequest.Component.ts" />
     <None Remove="ClientApp\app\components\registration\Registration.Component.ts" />
     <None Remove="ClientApp\app\dto\apiResponse.ts" />
     <None Remove="ClientApp\app\dto\Business.ts" />
     <None Remove="ClientApp\app\dto\RegiestrationRequest.ts" />
     <None Remove="ClientApp\app\dto\User.ts" />
+    <None Remove="ClientApp\app\services\Authentication.service.ts" />
+    <None Remove="ClientApp\app\services\AuthGuard.ts" />
     <None Remove="ClientApp\app\services\RegistrationRequest.service.ts" />
+    <None Remove="ClientApp\app\services\UnAuthAccessOnly.ts" />
     <None Remove="ClientApp\app\services\ValidateToken.service.ts" />
   </ItemGroup>
 
@@ -43,14 +48,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\dashboard\Dashboard.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\landing\landing.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\login\Login.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\registrationrequest\RegistrationRequest.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\registration\Registration.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\ApiResponse.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\Business.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\RegiestrationRequest.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\User.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\Authentication.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\AuthGuard.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\RegistrationRequest.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\UnAuthAccessOnly.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\ValidateToken.service.ts" />
   </ItemGroup>
 

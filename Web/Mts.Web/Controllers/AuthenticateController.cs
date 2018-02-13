@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mts.Core.Dto;
@@ -21,10 +22,14 @@ namespace Mts.Web.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IOptions<AppSettingConfig> _config;
-        public AuthenticateController(IAccountService accountService, IOptions<AppSettingConfig> config)
+        private readonly IMemoryCache _memoryCache;
+        public AuthenticateController(IAccountService accountService,
+                                      IOptions<AppSettingConfig> config,
+                                      IMemoryCache memoryCache)
         {
             _accountService = accountService;
             _config = config;
+            _memoryCache = memoryCache;
         }
 
         [HttpPost]
@@ -35,12 +40,30 @@ namespace Mts.Web.Controllers
             response.Success = result.Success;
             response.ErrorMesssage = result.ErrorMesssage;
 
+            return CreateToken(response, result);
+
+        }
+
+        [HttpPut]
+        public IActionResult Put([FromBody]string refreshToken)
+        {
+            var response = new ApiResponse<AuthToken>();
+            var result = _accountService.ReAuthenticateUser(refreshToken);
+            response.Success = result.Success;
+            response.ErrorMesssage = result.ErrorMesssage;
+
+            return CreateToken(response, result);
+        }
+
+        private IActionResult CreateToken(ApiResponse<AuthToken> response, ApiResponse<LoginDetail> result)
+        {
             if (result.Success)
             {
                 var claims = new[] {
                             new Claim("Name", result.DataResponse.Name),
                             new Claim("BusinessId", result.DataResponse.BusinessId.ToString()),
                             new Claim("Id", result.DataResponse.Id.ToString()),
+                            new Claim("k",result.DataResponse.AccessToken)
                 };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.Value.EncryptionKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -52,6 +75,9 @@ namespace Mts.Web.Controllers
                                     expires: DateTime.Now.AddMinutes(30),
                                     signingCredentials: creds);
 
+                var cacheEntryOptions = new MemoryCacheEntryOptions();
+                _memoryCache.Set(result.DataResponse.AccessToken, token, cacheEntryOptions);
+
                 response.DataResponse = new AuthToken()
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -59,7 +85,7 @@ namespace Mts.Web.Controllers
                 };
             }
             return new OkObjectResult(response);
-
         }
+
     }
 }

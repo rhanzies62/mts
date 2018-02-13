@@ -10,5 +10,6 @@ namespace Mts.Core.Dto
         public int BusinessId { get; set; }
         public string Name { get; set; }
         public string RefreshToken { get; set; }
+        public string AccessToken { get; set; }
     }
 }

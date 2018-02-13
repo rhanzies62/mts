@@ -1,0 +1,34 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col l5 offset-l3">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Login</span>
+
+                    <div *ngIf="!loginResult.success">
+                        <span>Oops! We found some issue in this request</span>
+                        <p *ngFor="let err of loginResult.errorMesssage">{{err}}</p>
+                    </div>
+
+                    <form id="frmlogin" #loginForm="ngForm">
+                        <div class="input-field">
+                            <input id="email" type="text" class="validate" [disabled]="isProcessing" [(ngModel)]="model.Email" name="Email" required>
+                            <label for="email" class="active" data-error="Email is required">Email</label>
+                        </div>
+                        <div class="input-field">
+                            <input id="password" type="password" class="validate" [disabled]="isProcessing" [(ngModel)]="model.Password" name="Password" required>
+                            <label for="password" data-error="Password Required">Password</label>
+                        </div>
+                        <div class="row">
+                            <a class="col m6 forgotPassword" href="">Forgot password?</a>
+                            <button class="btn col m4 offset-m2" [disabled]="!loginForm.valid || isProcessing" (click)="Login(model)">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col l5 offset-l3">
+            <a class="col m12 center-align" href="">Got problems? Talk to us.</a>
+        </div>
+    </div>
+</div>

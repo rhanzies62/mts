@@ -12,5 +12,6 @@ namespace Mts.Core.Interface.Service
         ApiResponse<bool> ValidateEmailToken(RegistrationRequest model);
         Task<ApiResponse<User>> RegisterUser(User user);
         ApiResponse<LoginDetail> AuthenticateUser(UserLogin model);
+        ApiResponse<LoginDetail> ReAuthenticateUser(string refreshToken);
     }
 }
