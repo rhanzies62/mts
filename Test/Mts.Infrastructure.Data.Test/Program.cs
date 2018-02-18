@@ -57,30 +57,30 @@ namespace Mts.Infrastructure.Data.Test
             });
 
             IMapper iMapper = config.CreateMapper();
-            var accountService = new AccountService(new CrudRepository<RegistrationRequest>(entities),
-                                                    new CrudRepository<User>(entities),
-                                                    new CrudRepository<Business>(entities),
-                                                    new CrudRepository<UserBusiness>(entities),
-                                                    iMapper,
-                                                    new Cryptography(),
-                                                    new EmailService(option),
-                                                    appConfig);
+            //var accountService = new AccountService(new CrudRepository<RegistrationRequest>(entities),
+            //                                        new CrudRepository<User>(entities),
+            //                                        new CrudRepository<Business>(entities),
+            //                                        new CrudRepository<UserBusiness>(entities),
+            //                                        iMapper,
+            //                                        new Cryptography(),
+            //                                        new EmailService(option),
+            //                                        appConfig);
             //accountService.RequestRegistration("francis.cebu@basecamptech.ph").Wait();
 
 
-            accountService.RegisterUser(new Dto.User
-            {
-                FirstName = "Francis",
-                LastName = "Cebu",
-                Email = "francis.cebu@basecamptech.ph",
-                Password = "Password!",
-                Business = new Dto.Business
-                {
-                    Name = "BCTech HQ",
-                    NatureOfBusiness = "We offer something",
-                    Website = "http://www.basecamptechnologies.ph"
-                }
-            }).Wait();
+            //accountService.RegisterUser(new Dto.User
+            //{
+            //    FirstName = "Francis",
+            //    LastName = "Cebu",
+            //    Email = "francis.cebu@basecamptech.ph",
+            //    Password = "Password!",
+            //    Business = new Dto.Business
+            //    {
+            //        Name = "BCTech HQ",
+            //        NatureOfBusiness = "We offer something",
+            //        Website = "http://www.basecamptechnologies.ph"
+            //    }
+            //}).Wait();
             //InsertBusiness();
             //GetRecord().Wait();
             //UpdateRecord().Wait();

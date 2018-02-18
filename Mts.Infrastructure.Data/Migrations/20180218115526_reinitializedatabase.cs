@@ -10,6 +10,26 @@ namespace Mts.Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AddressLineOne = table.Column<string>(nullable: false),
+                    City = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    District = table.Column<string>(nullable: false),
+                    StreetName = table.Column<string>(nullable: false),
+                    UpdatedBy = table.Column<string>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ApplicationFeature",
                 columns: table => new
                 {
@@ -20,6 +40,7 @@ namespace Mts.Infrastructure.Data.Migrations
                     IsParent = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     ParentId = table.Column<int>(nullable: false),
+                    RouteAddress = table.Column<string>(nullable: true),
                     UpdatedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -33,6 +54,7 @@ namespace Mts.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AddressId = table.Column<int>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     NatureOfBusiness = table.Column<string>(maxLength: 500, nullable: false),
@@ -62,6 +84,40 @@ namespace Mts.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CredentialUpdateLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    EmailAddress = table.Column<string>(nullable: true),
+                    IsPasswordUpdate = table.Column<bool>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CredentialUpdateLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LoginLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    IpAddress = table.Column<string>(nullable: true),
+                    Success = table.Column<bool>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoginLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RegistrationRequest",
                 columns: table => new
                 {
@@ -78,24 +134,6 @@ namespace Mts.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(maxLength: 50, nullable: false),
-                    Password = table.Column<string>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -108,6 +146,37 @@ namespace Mts.Infrastructure.Data.Migrations
                 {
                     table.PrimaryKey("PK_UserRole", x => new { x.UserId, x.RoleId });
                     table.UniqueConstraint("AK_UserRole_RoleId_UserId", x => new { x.RoleId, x.UserId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AddressId = table.Column<int>(nullable: false),
+                    ContactNumber = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    ErrorCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    IsEmailValidated = table.Column<bool>(nullable: false),
+                    LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    ValidatedDate = table.Column<DateTime>(nullable: false),
+                    ValidationToken = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,15 +292,27 @@ namespace Mts.Infrastructure.Data.Migrations
                 column: "BusinessId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_User_AddressId",
+                table: "User",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserBusiness_UserId",
                 table: "UserBusiness",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "BusinessClaim");
+
+            migrationBuilder.DropTable(
+                name: "CredentialUpdateLog");
+
+            migrationBuilder.DropTable(
+                name: "LoginLog");
 
             migrationBuilder.DropTable(
                 name: "RegistrationRequest");
@@ -259,6 +340,9 @@ namespace Mts.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Business");
+
+            migrationBuilder.DropTable(
+                name: "Address");
         }
     }
 }

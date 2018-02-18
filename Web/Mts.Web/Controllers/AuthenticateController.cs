@@ -33,10 +33,11 @@ namespace Mts.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]UserLogin model)
+        public async Task<IActionResult> Post([FromBody]UserLogin model)
         {
             var response = new ApiResponse<AuthToken>();
-            var result = _accountService.AuthenticateUser(model);
+            model.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            var result = await _accountService.AuthenticateUser(model);
             response.Success = result.Success;
             response.ErrorMesssage = result.ErrorMesssage;
 
@@ -45,16 +46,29 @@ namespace Mts.Web.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]string refreshToken)
+        public async Task<IActionResult> Put([FromBody]string refreshToken)
         {
-            var response = new ApiResponse<AuthToken>();
-            var result = _accountService.ReAuthenticateUser(refreshToken);
-            response.Success = result.Success;
-            response.ErrorMesssage = result.ErrorMesssage;
+            if (CheckRefreshTokenIfExist(refreshToken))
+            {
+                var response = new ApiResponse<AuthToken>();
+                var result = await _accountService.ReAuthenticateUser(refreshToken, Request.HttpContext.Connection.RemoteIpAddress.ToString());
+                response.Success = result.Success;
+                response.ErrorMesssage = result.ErrorMesssage;
+                return CreateToken(response, result);
+            }
+            else
+            {
+                return new OkObjectResult(new ApiResponse<AuthToken>() {
+                    Success = false,
+                     ErrorMesssage = new List<string>() {
+                         "Refersh token is not valid"
+                     }
+                });
+            }
 
-            return CreateToken(response, result);
         }
 
+        #region Private Methods
         private IActionResult CreateToken(ApiResponse<AuthToken> response, ApiResponse<LoginDetail> result)
         {
             if (result.Success)
@@ -63,7 +77,7 @@ namespace Mts.Web.Controllers
                             new Claim("Name", result.DataResponse.Name),
                             new Claim("BusinessId", result.DataResponse.BusinessId.ToString()),
                             new Claim("Id", result.DataResponse.Id.ToString()),
-                            new Claim("k",result.DataResponse.AccessToken)
+                            new Claim("k",result.DataResponse.RefreshToken)
                 };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.Value.EncryptionKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -74,18 +88,27 @@ namespace Mts.Web.Controllers
                                     claims: claims,
                                     expires: DateTime.Now.AddMinutes(30),
                                     signingCredentials: creds);
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions();
-                _memoryCache.Set(result.DataResponse.AccessToken, token, cacheEntryOptions);
+                string _token = new JwtSecurityTokenHandler().WriteToken(token);
 
                 response.DataResponse = new AuthToken()
                 {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Token = _token,
                     RefreshToken = result.DataResponse.RefreshToken
                 };
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions();
+                _memoryCache.Set(result.DataResponse.RefreshToken, response.DataResponse, cacheEntryOptions);
             }
             return new OkObjectResult(response);
         }
 
+        private bool CheckRefreshTokenIfExist(string refreshToken)
+        {
+            AuthToken token;
+            _memoryCache.TryGetValue<AuthToken>(refreshToken, out token);
+            _memoryCache.Remove(refreshToken);
+            return token != null;
+        }
+        #endregion
     }
 }

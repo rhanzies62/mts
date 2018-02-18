@@ -1,1 +1,16 @@
-﻿<h1>WELCOME TO DASHBOARD Baby!</h1>
+﻿
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Logo</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li class="profile">
+                <a class="dropdown valign-wrapper"><img class="circle responsive-img" src="../../../../wwwroot/Images/no-avatar.png" width="40"><span style="margin-left:10px;">Francis Cebu</span></a>
+                <ul id="profileDropdown" class="dropdown-content">
+                    <li><a [routerLink]="['profile']">Profile</a></li>
+                    <li><a href="#!">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+<router-outlet></router-outlet>

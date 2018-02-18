@@ -26,12 +26,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MtsResource.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resource\StoredProcedureResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StoredProcedureResource.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resource\MtsResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>MtsResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource\StoredProcedureResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StoredProcedureResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

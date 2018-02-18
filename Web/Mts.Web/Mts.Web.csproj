@@ -30,6 +30,7 @@
     <None Remove="ClientApp\app\components\login\Login.Component.ts" />
     <None Remove="ClientApp\app\components\registrationrequest\RegistrationRequest.Component.ts" />
     <None Remove="ClientApp\app\components\registration\Registration.Component.ts" />
+    <None Remove="ClientApp\app\components\userprofile\UserProfile.Component.ts" />
     <None Remove="ClientApp\app\dto\apiResponse.ts" />
     <None Remove="ClientApp\app\dto\Business.ts" />
     <None Remove="ClientApp\app\dto\RegiestrationRequest.ts" />
@@ -53,6 +54,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\login\Login.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\registrationrequest\RegistrationRequest.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\registration\Registration.Component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\userprofile\UserProfile.Component.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\ApiResponse.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\Business.ts" />
     <TypeScriptCompile Include="ClientApp\app\dto\RegiestrationRequest.ts" />

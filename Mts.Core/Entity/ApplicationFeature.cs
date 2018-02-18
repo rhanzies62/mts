@@ -29,5 +29,7 @@ namespace Mts.Core.Entity
         public DateTime CreatedDate { get; set; }
 
         public DateTime UpdatedDate { get; set; }
+
+        public string RouteAddress { get; set; }
     }
 }

@@ -24,6 +24,7 @@ namespace Mts.Infrastructure.Service
         private readonly CrudRepository<Entity.User> _userRepo;
         private readonly CrudRepository<Entity.Business> _businessRepo;
         private readonly CrudRepository<Entity.UserBusiness> _userBusinessRepo;
+        private readonly CrudRepository<Entity.LoginLog> _loginLogRepo;
         private readonly IMapper _mapper;
         private readonly ICryptography _crypto;
         private readonly IEmailService _emailService;
@@ -33,11 +34,13 @@ namespace Mts.Infrastructure.Service
                               CrudRepository<Entity.User> userRepo,
                               CrudRepository<Entity.Business> businessRepo,
                               CrudRepository<Entity.UserBusiness> userBusinessRepo,
+                              CrudRepository<Entity.LoginLog> loginLogRepo,
                               IMapper mapper,
                               ICryptography crypto,
                               IEmailService emailService,
                               IOptions<AppSettingConfig> config)
         {
+            _loginLogRepo = loginLogRepo;
             _registrationRequestRepo = registrationRequestRepo;
             _userRepo = userRepo;
             _businessRepo = businessRepo;
@@ -110,6 +113,8 @@ namespace Mts.Infrastructure.Service
         {
             var response = new ApiResponse<User>();
             var userEntity = _mapper.Map<Entity.User>(user);
+            userEntity.IsActive = true;
+
             var businessEntity = _mapper.Map<Entity.Business>(user.Business);
 
             var isEmailExist = _userRepo.List(i => i.Email == user.Email).Any();
@@ -186,42 +191,66 @@ namespace Mts.Infrastructure.Service
             return body;
         }
 
-        public ApiResponse<LoginDetail> AuthenticateUser(UserLogin model)
+        public async Task<ApiResponse<LoginDetail>> AuthenticateUser(UserLogin model)
         {
             var response = new ApiResponse<LoginDetail>();
+
             var userDetail = _userRepo.List(i => i.Email == model.Email).FirstOrDefault();
-            if (userDetail == null || !_crypto.CheckMatch(userDetail.Password, model.Password))
+            var loginLog = new Entity.LoginLog(model.IpAddress);
+
+            if (userDetail !=null && !userDetail.IsActive)
             {
                 response.Success = false;
-                response.ErrorMesssage.Add(MtsResource.EmailPasswordNotFound);
+                response.ErrorMesssage.Add(MtsResource.AccountLocked);
+                loginLog.Success = false;
             }
+
             if (response.Success)
             {
-                var userBusiness = _userBusinessRepo.List(i => i.UserId == userDetail.Id).FirstOrDefault();
-                if (userBusiness != null)
-                {
-                    string chip = $"{model.Email}:{model.Password}";
-                    response.DataResponse = new LoginDetail()
-                    {
-                        BusinessId = userBusiness.BusinessId,
-                        Id = userDetail.Id,
-                        Name = $"{userDetail.FirstName} {userDetail.LastName}",
-                        RefreshToken = $"{_crypto.EncryptString(chip, _config.EncryptionKey)}.{_crypto.CalculateHash(chip)}",
-                        AccessToken = RandomGenerator.GenerateString(16)
-                    };
-                }
-                else
+                if (userDetail == null || !_crypto.CheckMatch(userDetail.Password, model.Password))
                 {
                     response.Success = false;
                     response.ErrorMesssage.Add(MtsResource.EmailPasswordNotFound);
+                    if (userDetail != null)
+                    {
+                        loginLog.Success = false;
+                        loginLog.UserId = userDetail.Id;
+                        userDetail.ErrorCount += 1;
+                        if (userDetail.ErrorCount == _config.MaxLoginErrorCount)
+                            await DeactivateUser(userDetail);
+                    }
                 }
-
+                if (response.Success)
+                {
+                    var userBusiness = _userBusinessRepo.List(i => i.UserId == userDetail.Id).FirstOrDefault();
+                    if (userBusiness != null)
+                    {
+                        string chip = $"{model.Email}:{model.Password}";
+                        loginLog.UserId = userDetail.Id;
+                        userDetail.ErrorCount = 0;
+                        await _userRepo.Update(userDetail);
+                        response.DataResponse = new LoginDetail()
+                        {
+                            BusinessId = userBusiness.BusinessId,
+                            Id = userDetail.Id,
+                            Name = $"{userDetail.FirstName} {userDetail.LastName}",
+                            RefreshToken = $"{_crypto.EncryptString(chip, _config.EncryptionKey)}.{_crypto.CalculateHash(chip)}",
+                            AccessToken = RandomGenerator.GenerateString(16)
+                        };
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.ErrorMesssage.Add(MtsResource.EmailPasswordNotFound);
+                    }
+                }
             }
 
+            await _loginLogRepo.Save(loginLog);
             return response;
         }
 
-        public ApiResponse<LoginDetail> ReAuthenticateUser(string refreshToken)
+        public async Task<ApiResponse<LoginDetail>> ReAuthenticateUser(string refreshToken,string ipAddress)
         {
             var response = new ApiResponse<LoginDetail>();
             var tokenPartition = refreshToken.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -240,12 +269,13 @@ namespace Mts.Infrastructure.Service
                     if (_crypto.CheckMatch(tokenPartition[1], chip))
                     {
                         var userCred = chip.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        if(userCred.Length == 2)
+                        if (userCred.Length == 2)
                         {
-                            response = this.AuthenticateUser(new UserLogin
+                            response = await this.AuthenticateUser(new UserLogin
                             {
                                 Email = userCred[0],
-                                Password = userCred[1]
+                                Password = userCred[1],
+                                IpAddress = ipAddress
                             });
                         }
                         else
@@ -264,6 +294,12 @@ namespace Mts.Infrastructure.Service
 
             }
             return response;
+        }
+
+        private async Task DeactivateUser(Entity.User user)
+        {
+            user.IsActive = false;
+            await _userRepo.Update(user);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Mts.Core.Entity
@@ -10,6 +11,9 @@ namespace Mts.Core.Entity
     {
         [Key]
         public int Id { get; set; }
+
+        [ForeignKey("Address")]
+        public int AddressId { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -32,6 +36,26 @@ namespace Mts.Core.Entity
         [Required]
         public DateTime UpdatedDate { get; set; }
 
+        [Required]
+        public bool IsActive { get; set; }
+
+        [Required]
+        public int ErrorCount { get; set; }
+
+        [Required]
+        public bool IsEmailValidated { get; set; }
+
+        [Required]
+        public DateTime ValidatedDate { get; set; }
+
+        [Required]
+        public string ValidationToken { get; set; }
+
+        public string ContactNumber { get; set; }
+
         public virtual UserBusiness UserBusiness { get; set; }
+
+        public virtual Address Address { get; set; }
+
     }
 }

@@ -26,6 +26,9 @@ namespace Mts.Infrastructure.Data
             modelBuilder.Entity<RoleApplicationFeature>().ToTable("RoleApplicationFeature").HasKey(e => new {e.RoleId,e.ApplicationFeatureId });
             modelBuilder.Entity<ApplicationFeature>().ToTable("ApplicationFeature");
             modelBuilder.Entity<RegistrationRequest>().ToTable("RegistrationRequest");
+            modelBuilder.Entity<LoginLog>().ToTable("LoginLog");
+            modelBuilder.Entity<Address>().ToTable("Address");
+            modelBuilder.Entity<CredentialUpdateLog>().ToTable("CredentialUpdateLog");
         }
 
         public DbSet<Business> Businesses { get; set; }
@@ -38,5 +41,9 @@ namespace Mts.Infrastructure.Data
         public DbSet<RoleApplicationFeature> RoleApplicationFeatures { get; set; }
         public DbSet<ApplicationFeature> ApplicationFeature { get; set; }
         public DbSet<RegistrationRequest> RegistrationRequest { get; set; }
+        public DbSet<LoginLog> LoginLog { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<CredentialUpdateLog> CredentialUpdateLog { get; set; }
+
     }
 }

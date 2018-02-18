@@ -11,7 +11,7 @@ using System;
 namespace Mts.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MtsContext))]
-    [Migration("20180211120602_reinitializedatabase")]
+    [Migration("20180218115526_reinitializedatabase")]
     partial class reinitializedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,38 @@ namespace Mts.Infrastructure.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Mts.Core.Entity.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AddressLineOne")
+                        .IsRequired();
+
+                    b.Property<string>("City")
+                        .IsRequired();
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("District")
+                        .IsRequired();
+
+                    b.Property<string>("StreetName")
+                        .IsRequired();
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
 
             modelBuilder.Entity("Mts.Core.Entity.ApplicationFeature", b =>
                 {
@@ -38,6 +70,8 @@ namespace Mts.Infrastructure.Data.Migrations
 
                     b.Property<int>("ParentId");
 
+                    b.Property<string>("RouteAddress");
+
                     b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
@@ -49,6 +83,8 @@ namespace Mts.Infrastructure.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AddressId");
 
                     b.Property<DateTime>("CreatedDate");
 
@@ -118,6 +154,46 @@ namespace Mts.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Claim");
+                });
+
+            modelBuilder.Entity("Mts.Core.Entity.CredentialUpdateLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("EmailAddress");
+
+                    b.Property<bool>("IsPasswordUpdate");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CredentialUpdateLog");
+                });
+
+            modelBuilder.Entity("Mts.Core.Entity.LoginLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("IpAddress");
+
+                    b.Property<bool>("Success");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoginLog");
                 });
 
             modelBuilder.Entity("Mts.Core.Entity.RegistrationRequest", b =>
@@ -192,14 +268,24 @@ namespace Mts.Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AddressId");
+
+                    b.Property<string>("ContactNumber");
+
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Email")
                         .IsRequired();
 
+                    b.Property<int>("ErrorCount");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsEmailValidated");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -210,7 +296,14 @@ namespace Mts.Infrastructure.Data.Migrations
 
                     b.Property<DateTime>("UpdatedDate");
 
+                    b.Property<DateTime>("ValidatedDate");
+
+                    b.Property<string>("ValidationToken")
+                        .IsRequired();
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.ToTable("User");
                 });
@@ -227,7 +320,8 @@ namespace Mts.Infrastructure.Data.Migrations
 
                     b.HasKey("BusinessId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("UserBusiness");
                 });
@@ -283,6 +377,14 @@ namespace Mts.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Mts.Core.Entity.User", b =>
+                {
+                    b.HasOne("Mts.Core.Entity.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Mts.Core.Entity.UserBusiness", b =>
                 {
                     b.HasOne("Mts.Core.Entity.Business", "Business")
@@ -291,8 +393,8 @@ namespace Mts.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Mts.Core.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("UserBusiness")
+                        .HasForeignKey("Mts.Core.Entity.UserBusiness", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

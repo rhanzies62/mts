@@ -1,6 +1,6 @@
 ﻿<div class="container">
     <div class="row">
-        <div class="col l6 offset-l3">
+        <div class="col l6 offset-l3 m8 offset-m2 s12">
             <div class="card" *ngIf="!showSuccess">
                 <div class="card-content" *ngIf="isTokenValidated">
                     <div *ngIf="!requestResult.success">
@@ -38,7 +38,7 @@
                             </div>
                             <span>Account Information</span>
                             <div class="input-field">
-                                <input id="email" type="text" class="validate" [(ngModel)]="model.Email" name="Email" required [disabled]="true">
+                                <input id="email" type="text" class="validate" [(ngModel)]="model.Email" name="Email" required [disabled]="true" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
                                 <label for="email" class="active" data-error="Email is required">Email</label>
                             </div>
                             <div class="input-field">

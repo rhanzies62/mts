@@ -1,0 +1,73 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col l4 offset-l4 center-align">
+            <img class="circle responsive-img" src="../../../../wwwroot/Images/no-avatar.png" width="150">
+            <h5>Francis Cebu</h5>
+            <label>Managing Supervisor</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l6">
+            <form id="profileForm" name="profileForm" #profileForm="ngForm" class="grey lighten-5 z-depth-1 col l12">
+                <span class="col l12">Basic Information</span>
+                <div class="input-field col l6">
+                    <input id="firstname" type="text" class="validate" name="FirstName" required>
+                    <label for="firstname" data-error="First Name Required">First Name</label>
+                </div>
+                <div class="input-field col l6">
+                    <input id="lastname" type="text" class="validate" name="LastName" required>
+                    <label for="lastname" data-error="Last Name Required">Last Name</label>
+                </div>
+                <div class="input-field col l6">
+                    <input id="contactNumber" type="text" class="validate" name="ContactNumber">
+                    <label for="contactNumber">Contact Number</label>
+                </div>
+                <span class="col l12">Address Information</span>
+                <div class="input-field col l6">
+                    <input id="unitnumber" type="text" class="validate" name="unitnumber" required>
+                    <label for="unitnumber">Unit Number/House/Building/Street Number</label>
+                </div>
+                <div class="input-field col l6">
+                    <input id="streetName" type="text" class="validate" name="streetName" required>
+                    <label for="streetName">Street Name</label>
+                </div>
+                <div class="input-field col l6">
+                    <input id="district" type="text" class="validate" name="district" required>
+                    <label for="district">Barangay/District Name/Subdivision</label>
+                </div>
+                <div class="input-field col l6">
+                    <input id="city" type="text" class="validate" name="city" required>
+                    <label for="city">City/Municipality</label>
+                </div>
+                <div class="col l12">
+                    <div class="right-align">
+                        <button class="btn">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col l6">
+            <form id="accountForm" name="accountForm" #accountForm="ngForm" class="grey lighten-5 z-depth-1 col l12">
+                <span class="col l12">Account Information</span>
+                <div class="input-field col l12">
+                    <input id="firstname" type="text" class="validate" name="FirstName" required>
+                    <label for="firstname" data-error="First Name Required">Email Address</label>
+                </div>
+                <div class="input-field col l12">
+                    <input id="firstname" type="text" class="validate" name="FirstName" required>
+                    <label for="firstname" data-error="First Name Required">Password</label>
+                </div>
+                <div class="input-field col l12">
+                    <input id="firstname" type="text" class="validate" name="FirstName" required>
+                    <label for="firstname" data-error="First Name Required">Confirm Password</label>
+                </div>
+                <div class="col l12">
+                    <div class="right-align">
+                        <button class="btn">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

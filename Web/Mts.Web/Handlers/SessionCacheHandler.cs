@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using Mts.Core.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,9 @@ namespace Mts.Web.Handlers
         {
             var claims = context.User.Claims.Where(i => i.Type == "k").First();
 
-            string toks = "";
-            _cache.MemCache.TryGetValue(claims.Value, out toks);
-            if (!string.IsNullOrEmpty(toks))
+            AuthToken toks;
+            _cache.MemCache.TryGetValue<AuthToken>(claims.Value, out toks);
+            if (toks != null)
                 context.Succeed(requirement);
 
             return Task.CompletedTask;

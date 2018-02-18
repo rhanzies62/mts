@@ -1,0 +1,10 @@
+﻿.container {
+    margin-top: 10px;
+}
+.row div{
+    padding:5px;
+}
+#profileForm, #accountForm {
+    padding-top: 10px;
+}
+

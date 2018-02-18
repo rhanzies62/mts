@@ -61,6 +61,15 @@ namespace Mts.Core.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This account is locked due to multiple login error attempts.
+        /// </summary>
+        public static string AccountLocked {
+            get {
+                return ResourceManager.GetString("AccountLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BCT.
         /// </summary>
         public static string AdminCreateUpdateBy {
@@ -185,6 +194,15 @@ namespace Mts.Core.Resource {
         public static string RoleAlreadyExist {
             get {
                 return ResourceManager.GetString("RoleAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An internal server error was caught. .
+        /// </summary>
+        public static string ServiceInternalServerError {
+            get {
+                return ResourceManager.GetString("ServiceInternalServerError", resourceCulture);
             }
         }
     }

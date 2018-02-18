@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Mts.Core.Entity
@@ -10,6 +11,9 @@ namespace Mts.Core.Entity
     {
         [Key]
         public int Id { get; set; }
+
+        [ForeignKey("Address")]
+        public int AddressId { get; set; }
 
         [Required]
         [MaxLength(50)]

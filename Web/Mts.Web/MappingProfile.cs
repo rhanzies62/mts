@@ -18,6 +18,8 @@ namespace Mts.Web
             CreateMap<Dto.Role, Entity.Role>();
             CreateMap<Dto.RoleApplicationFeature, Entity.RoleApplicationFeature>();
             CreateMap<Dto.Role, Entity.UserRole>();
+            CreateMap<Dto.UserProfile, Entity.User>();
+            CreateMap<Dto.Address, Entity.Address>();
 
             //Entity to DTO
             CreateMap<Entity.RegistrationRequest, Dto.RegistrationRequest>();
@@ -25,6 +27,8 @@ namespace Mts.Web
             CreateMap<Entity.Business, Dto.Business>();
             CreateMap<Entity.Role, Dto.Role>();
             CreateMap<Entity.RoleApplicationFeature, Dto.RoleApplicationFeature>();
+            CreateMap<Entity.User, Dto.UserProfile>();
+            CreateMap<Entity.Address, Dto.Address>();
         }
     }
 }

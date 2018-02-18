@@ -11,6 +11,7 @@ import { LandingComponent } from './components/landing/landing.component';
 import { RegistrationRequestComponent } from './components/registrationrequest/RegistrationRequest.Component';
 import { RegistrationComponent } from './components/registration/Registration.Component';
 import { LoginComponent } from './components/login/Login.Component';
+import { UserProfileComponent } from './components/userprofile/UserProfile.Component';
 
 //api components
 import { RegistrationRequestService } from '../app/services/RegistrationRequest.service';
@@ -29,7 +30,8 @@ import { UnAuthAccessOnly } from './services/UnAuthAccessOnly';
         RegistrationRequestComponent,
         RegistrationComponent,
         LoginComponent,
-        DashboardComponent
+        DashboardComponent,
+        UserProfileComponent
     ],
     providers: [
         RegistrationRequestService,
@@ -48,8 +50,15 @@ import { UnAuthAccessOnly } from './services/UnAuthAccessOnly';
             { path: 'home', component: LandingComponent },
             { path: 'request', component: RegistrationRequestComponent },
             { path: 'register', component: RegistrationComponent },
-            { path: 'login', component: LoginComponent, canActivate: [UnAuthAccessOnly]},
-            { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+            { path: 'login', component: LoginComponent, canActivate: [UnAuthAccessOnly] },
+            {
+                path: 'dashboard',
+                component: DashboardComponent,
+                canActivate: [AuthGuard],
+                children: [
+                    { path: 'profile', component: UserProfileComponent }
+                ]
+            },
             { path: '**', redirectTo: 'home' }
         ])
     ]

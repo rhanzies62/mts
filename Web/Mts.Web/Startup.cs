@@ -24,6 +24,7 @@ using Mts.Web.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Mts.Core.Interface.Repository;
 
 namespace Mts.Web
 {
@@ -43,6 +44,10 @@ namespace Mts.Web
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ICryptography, Cryptography>();
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
+
             services.AddTransient<CrudRepository<Entity.RegistrationRequest>, CrudRepository<Entity.RegistrationRequest>>();
             services.AddTransient<CrudRepository<Entity.User>,CrudRepository<Entity.User>>();
             services.AddTransient<CrudRepository<Entity.Business>, CrudRepository<Entity.Business>>();
@@ -51,6 +56,9 @@ namespace Mts.Web
             services.AddTransient<CrudRepository<Entity.RoleApplicationFeature>, CrudRepository<Entity.RoleApplicationFeature>>();
             services.AddTransient<CrudRepository<Entity.UserRole>, CrudRepository<Entity.UserRole>>();
             services.AddTransient<CrudRepository<Entity.ApplicationFeature>, CrudRepository<Entity.ApplicationFeature>>();
+            services.AddTransient<CrudRepository<Entity.LoginLog>, CrudRepository<Entity.LoginLog>>();
+            services.AddTransient<CrudRepository<Entity.Address>, CrudRepository<Entity.Address>>();
+            services.AddTransient<CrudRepository<Entity.CredentialUpdateLog>, CrudRepository<Entity.CredentialUpdateLog>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         .AddJwtBearer(options =>
@@ -66,6 +74,12 @@ namespace Mts.Web
                                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("E546C8DF278CD5931069B522E695D4F2"))
                             };
                         });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SessionCache", policy =>
+                    policy.Requirements.Add(new SessionCachedRequirement()));
+            });
 
             services.AddOptions();
             services.Configure<Config.AppSettingConfig>(Configuration.GetSection("Config"));

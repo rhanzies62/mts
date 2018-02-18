@@ -8,5 +8,6 @@ namespace Mts.Core.Dto.Config
     {
         public string Url { get; set; }
         public string EncryptionKey { get; set; }
+        public int MaxLoginErrorCount { get; set; }
     }
 }
